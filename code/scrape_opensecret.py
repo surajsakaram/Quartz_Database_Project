@@ -3,12 +3,18 @@ import urllib3 as ul
 import sys, csv
 import re
 
+def swap_column_arr(arr, a, b):
+    temp = arr[a]
+    arr[a] = arr[b]
+    arr[b] = temp
+
+
 debug_mode = False
 
 ## define usage: python3 filename <first_name> (<intial>) <last_name>
 if len(sys.argv) != 2:
-  print("usage: python3 file.py \"first name <optional: initial> last name\"")
-  sys.exit(1)
+    print("usage: python3 file.py \"first name <optional: initial> last name\"")
+    sys.exit(1)
 
 
 page = 1
@@ -26,7 +32,7 @@ while loop:
 
     # get a response from http request
     response = http.request('GET', url)
-
+    print("page",page)
     # if request is not successful, quit the program
     if response.status != 200: 
         print("status:",response.status)
@@ -50,15 +56,13 @@ while loop:
             # ignore the "WARNING row" by checking if <td> has class "c-red"
             class_attr = td.get("class", [])
             if not "c-red" in class_attr:
-                # append if no
                 this_row.append(re.sub(' +',' ',td.text.strip().replace("\n","\t")))
         if this_row:
-            temp = this_row[0]
-            this_row[0] = this_row[1]
-            this_row[1] = temp
+            swap_column_arr(this_row, 0, 1)
             all_data.append(this_row)
 
     page += 1
+
 
 if debug_mode:
     print(all_data)
@@ -66,5 +70,7 @@ if debug_mode:
 
 with open('opensecret_'+output_file_name+'.csv','w', newline="") as f:
     writer = csv.writer(f)
+    header = ['Contributor', 'Category', 'Occupation', 'Date', 'Amount', 'Recipient']
+    writer.writerow(header)
     for line in all_data:
         writer.writerow(line)
