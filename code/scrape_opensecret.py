@@ -3,6 +3,7 @@ import urllib3 as ul
 import sys, csv
 import re
 
+
 def swap_column_arr(arr, a, b):
     temp = arr[a]
     arr[a] = arr[b]
@@ -10,6 +11,8 @@ def swap_column_arr(arr, a, b):
 
 
 debug_mode = False
+# supress urllib3 warning
+ul.disable_warnings(ul.exceptions.InsecureRequestWarning)
 
 ## define usage: python3 filename <first_name> (<intial>) <last_name>
 if len(sys.argv) != 2:
@@ -44,6 +47,10 @@ while loop:
     # stop looping if no more result can be found
     tbody = soup.find("tbody")
     if not tbody:
+        if page == 1:
+            print("no result found...")
+        else:
+            print("no more record...")
         loop = False
         continue
 
