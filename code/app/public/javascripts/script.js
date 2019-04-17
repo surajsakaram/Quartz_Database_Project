@@ -8,7 +8,7 @@
         this.headerType         = document.getElementsByName('type');
 
         this.readUploadFile = this.readUploadFile.bind(this);
-        this.clearUploadFile = this.clearUploadFile.bind(this)
+        this.clearUploadFile = this.clearUploadFile.bind(this);
 
         this.clearUpload.addEventListener("click",this.clearUploadFile)
         this.headerListFiled.addEventListener("click",this.removeHeader, true);

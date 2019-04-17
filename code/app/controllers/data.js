@@ -1,14 +1,13 @@
-var express             = require('express');
-var router              = express.Router();
-
+var express  = require('express');
+var router   = express.Router();
+var db   = require('../models');
 
 router.get('/',function(req,res){
     res.render('index',{ title:"sdfsdf"});
 });
-router.get('/page/login/afk',function(req,res){
+
+router.post('/',function(req,res){
     res.render('index',{ title:"sdfsdf"});
 });
-
-
 
 module.exports = router;

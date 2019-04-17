@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var routes   = require('./routes/routes');
-
+var auth = require('./modules/auth')
 var app = express();
 
 // view engine setup
@@ -16,7 +16,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function(req,res,next){
+  const token = req.headers['x-token']; 
+    if(token===undefined){ 
+        res.locals.userData = null;
+        next();
+    }else{  
+      auth.tokenValidate(token,(err,data)=>{
+        if(err ===false){
+          res.locals.userData = null;
+        }
+        else{
+          res.locals.userData = data;
+        }
+        next();
+      });
+    }
+});
+
 app.use(routes);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
