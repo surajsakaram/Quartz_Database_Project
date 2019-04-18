@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-mongoose.connect( process.env.MONGODB_URI || "mongodb://localhost/lobbing" );
+mongoose.connect( process.env.MONGODB_URI || "mongodb://localhost/lobbing",{ useNewUrlParser: true } );
 
 const group   = require('./db.group');
 const upload  = require('./db.upload');

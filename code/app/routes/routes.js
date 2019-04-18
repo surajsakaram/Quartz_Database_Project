@@ -18,7 +18,7 @@ router.use(function(req, res, next) {
         if(req.xhr===true){
             res.status(403).json({"message":"page not found"});
         }else{
-            res.status(403).render('pageNotFound');
+            res.status(403).render(config.pageNotFoundView);
         }
         
     }

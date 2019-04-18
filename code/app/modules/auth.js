@@ -21,12 +21,14 @@ module.exports = {
             }
         });
     },
+
     genToken: function(id){
         return  jwt.sign({
                     exp: Math.floor(Date.now() / 1000) + (86400),
                     data: id
                 }, authConfig.jwtSecret);
-    },
+    },   
+    
     genPassword: function(password,cb){
         bcrypt.genSalt(12, function(err, salt) {
             if(err) cb(err,null);

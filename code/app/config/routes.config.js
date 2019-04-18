@@ -1,5 +1,5 @@
 module.exports = {
-    defaultController :'default',
-    pageNotFoundView  : 'pageNotFound'
+    defaultController :'page',
+    pageNotFoundView  : 'pages/pageNotFound'
 
 }
