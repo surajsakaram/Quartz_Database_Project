@@ -4,6 +4,8 @@ const usersSchema = new mongoose.Schema({
     name:String,
     email:String,
     phone:Number,
+    lastLogin:Number,
+    createOn:Number,
     password:String,
     active:Boolean,
     groupId:{

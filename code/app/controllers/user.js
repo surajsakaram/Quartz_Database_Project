@@ -2,8 +2,16 @@ var express  = require('express');
 var router   = express.Router();
 const user = require('../modules/user');
 
-router.get('/',function(req,res){
-    res.render('index',{ title:"sdfsdf"});
+router.get('/:type',function(req,res){
+   
+    let type = (req.params.type==='active'?true:false);
+    let posStart = parseInt(req.query.posStart || 0);
+    let count    = parseInt(req.query.count || 5);
+   
+    user.renderUser(type,posStart,count,(data)=>{
+        res.set("Content-type","text/xml").end(data);
+    });
+    
 });
 
 router.post('/',function(req,res){
@@ -14,6 +22,9 @@ router.post('/',function(req,res){
     else{
         if(req.body.name===undefined || (req.body.name).length >50 || /^[0-9a-zA-Z\s]+$/.test(req.body.name)===false  ){
             err.push('Invalid name')
+        }
+        if(req.body.phone===undefined || (req.body.phone).length >50 || /^[0-9]+$/.test(req.body.phone)===false  ){
+            err.push('Invalid phone number')
         }
         if(req.body.email===undefined || (req.body.email).length >50 || /^\S+@\S+$/.test(req.body.email)===false  ){
             err.push('Invalid email')
@@ -29,7 +40,8 @@ router.post('/',function(req,res){
                 {
                     name:req.body.name,
                     email:req.body.email,
-                    password:req.body.password
+                    password:req.body.password,
+                    phone:req.body.phone
                 },
                 (err,data)=>{
                     if(err){
@@ -80,7 +92,13 @@ router.post('/login',function(req,res){
                         res.json({"message":"Error found try later","status":"error"}).end();
                     }
                     else{
-                        res.header({'x-token':data}).json({"message":"Login sucessfully","status":"sucess"}).end()
+                        // res.header({'x-token':data}).json({"message":"Login sucessfully","status":"sucess"}).end()
+
+                        res.cookie('ucr_infosil',data, { expires: new Date(Date.now() + 86400000), httpOnly: true,path:'/',maxAge:86400000 });
+                        res.writeHead(302, {
+                            'Location': '/'
+                        });
+                        res.end();
                     }
                 }
             )

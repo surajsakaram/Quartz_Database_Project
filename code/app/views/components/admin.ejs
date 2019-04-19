@@ -1,0 +1,197 @@
+<div id="rf">
+    <div id="ribbon"></div>
+</div>
+<div id="tableFeild" ></div>
+
+<script type="text/javascript" language="javascript">
+	var InitObj = function(){
+		this.csrf_tokens 		= '';
+		this.kycUpload 			= false;
+		this.selectedGridIds 	= null;
+		this.selectedGrid   	= null;
+		this.ribbonPreviousId 	= null;
+		this.ribbonSelectId 	= null; // it holds current selected id of ribbon select button
+        this.searchQuery 		= '';
+		this.ribbonJson 		= '<%= json %>';
+	};
+	
+	InitObj.prototype= new Ucr_dhx();
+	
+	InitObj.prototype.dhx_win = function(obj){
+		this.create_dhx_window({
+			winId				: obj.id, 
+			height				: obj.height,
+			width				: obj.width,
+			headerText			: obj.header,
+			modal				: (obj.modal===undefined)?true : obj.modal,
+			clear_load			: obj.clear_l || null,
+			load_file			: obj.file_l || null,
+			win_num				: obj.win_nums || 'single',
+			gridId				: obj.gridId || null ,
+			multiple			: obj.multiple || 'single',
+			attachUrl			: obj.attachUrl || null
+		});	
+		
+	}
+	InitObj.prototype.userTable = function (id){
+		var type  = (this.ribb['ribbon'].getValue('userco')==2)?'suspend':'active';
+		
+		this.create_dhx_grid({
+			p_id				: id,
+			setHeader			: "Name,Phone,Email,Date Created,Last Login",							
+			setInitWidths		: "350,200,150,150,149",
+			setColAlign			: "left,left,left,left,left",
+			setColTypes			: 'txt,txt,txt,txt,txt',
+			setColumnIds		: '"name,ph,eml,date,ldate"', 
+			enableEditEvents	: 'true,false,true',
+			multi_select		: true,
+			xml_link			: '../user/'+type
+		 });
+	}
+	InitObj.prototype.uploadTable = function (id){
+		this.create_dhx_grid({
+			p_id				: id,
+			setHeader			: "Upload By, File , Description,Date",							
+			setInitWidths		: "350,200,300,149",
+			setColAlign			: "left,left,left,left",
+			setColTypes			: 'txt,txt,txt,txt',
+			setColumnIds		: '"up,fl,des,dt"', 
+			enableEditEvents	: 'true,false,true',
+			multi_select		: true,
+			// xml_link			: 'loan/renderPenalty'
+		});
+	}
+	
+	InitObj.prototype.ribbonEvevnt = function(id){
+		this.searchQuery ='';
+		this.destroy_dhx_object('window');
+		if(id=='userlist'){ 
+			this.userTable('tableFeild');
+		}
+		else if(id=='uploadlist'){
+			this.uploadTable('tableFeild');
+		}
+		this.ribbonPreviousId = id;
+	}
+	InitObj.prototype.selectedGridId = function(type,grid){
+		this.selectedGrid = grid || 'tableFeild_t';
+		var type = type || 'single';
+		
+		var id = this.grid[this.selectedGrid].getSelectedRowId();
+		if(id == null ){
+			this.message_show("There is no row selected form table",'error');
+			return null;
+		}
+		id = id.split(',');
+		if(type == 'single'){
+			if(id.length == 1 ) return id[0];
+			else{
+				this.message_show("You can't select multiple row for this action ",'error');
+				return null;
+			}
+		}
+		return id;
+	}
+	
+	/*
+	 object initilization 
+	*/
+	obj = new InitObj();
+	
+    var tabIds = [];
+   
+	obj.create_dhx_ribbon({
+		parent:	'ribbon',
+		icon_p:	 './resources/images',
+		tabs: 	JSON.parse((obj.ribbonJson).replace(/&#34;/g,'"'))
+	});
+	obj.ribb['ribbon']._tabbar.forEachTab(function(tab){ // geting all ribbon tab ids
+		var id = tab.getId();
+		tabIds.push(id);
+	});
+	obj.ribb['ribbon']._tabbar.tabs(tabIds[0]).setActive(); // setting first tab as active
+	obj.userTable('tableFeild');
+	obj.ribb['ribbon'].attachEvent("onClick", function(itemId, bId){
+        if(itemId=='rst_pass'){
+            obj.selectedGridIds = obj.selectedGridId();
+            if(obj.selectedGridIds!= null){
+                if(obj.ribbonPreviousId =='cooperativeList'){
+                    obj.dhx_win({ id:itemId,height:190,width:370,header:'Reset Password',file_l:'users/users_view/reset_password'});
+                }
+                else if(obj.ribbonPreviousId =='member'){
+                    obj.dhx_win({ id:itemId,height:190,width:370,header:'Reset Member Password',file_l:'members/members_view/reset_password'});
+                }
+            }
+        }	
+        else if(itemId=='addBal'){
+            obj.selectedGridIds = obj.selectedGridId();
+            if(obj.selectedGridIds!= null)obj.dhx_win({ id:itemId,height:190,width:340,header:'Add Balance',file_l:'users/users_view/add_balance'});
+        }	
+        else if(itemId=='assignshortcode'){
+            obj.selectedGridIds = obj.selectedGridId();
+            if(obj.selectedGridIds!= null)obj.dhx_win({ id:itemId,height:350,width:330,header:'Assign Shortcode',file_l:'users/users_view/assignShortcode/'+obj.grid['tableFeild_t'].getSelectedRowId()});
+        }	
+        else if(itemId=='assigngateway'){
+            obj.selectedGridIds = obj.selectedGridId();
+            if(obj.selectedGridIds!= null)obj.dhx_win({ id:itemId,height:350,width:330,header:'Assign Gateway',file_l:'users/users_view/assignGateway/'+obj.grid['tableFeild_t'].getSelectedRowId()});
+        }	
+        else if(itemId=='assignfeature'){
+            obj.selectedGridIds = obj.selectedGridId();
+            if(obj.selectedGridIds!= null){
+                if(obj.ribbonPreviousId =='cooperativeList'){
+                    var type  = (obj.ribb['ribbon'].getValue('clients_co')==2)?'disapprove':'approve';
+                    obj.dhx_win({ id:itemId,height:350,width:330,header:'Assign Feature',file_l:'users/users_view/assignFeature/'+obj.grid['tableFeild_t'].getSelectedRowId(),clear_l:'users/renderUsers/'+type,gridId:'tableFeild_t'});
+                }
+                else if(obj.ribbonPreviousId =='member'){
+                    var type  = (obj.ribb['ribbon'].getValue('member_combo')==1)?'active':'closed';
+                    obj.dhx_win({ id:itemId,height:350,width:330,header:'Assign Feature',file_l:'members/members_view/assignFeature/'+obj.grid['tableFeild_t'].getSelectedRowId(),clear_l:'members/renderMembers/'+type+'/search',gridId:'tableFeild_t'});
+                }
+            }
+        }	
+        else if(itemId=='memberdetails'){
+            obj.selectedGridIds = obj.selectedGridId();
+            if(obj.selectedGridIds!=null ) obj.dhx_win({ id:itemId,height:450,width:600,header:'Members Details',file_l:'members/members_view/memberDetails/'+obj.selectedGridIds});
+        }
+        else if(itemId=='membertransaction'){
+            obj.selectedGridIds = obj.grid['tableFeild_t'].getSelectedRowId();
+            if(obj.selectedGridIds!=null ) obj.dhx_win({ id:itemId,height:600,width:755,header:'Members Transaction',file_l:'members/members_view/memberTransaction/'+obj.selectedGridIds});
+            else obj.dhx_win({ id:itemId,height:600,width:755,header:'Members Transaction',file_l:'members/members_view/memberTransaction'});
+        }
+        else if(itemId=='cl_loan_tran'){
+            if(obj.ribbonPreviousId == 'loanmembers'){
+            obj.selectedGridIds = obj.grid['tableFeild_t'].getSelectedRowId();
+            if(obj.selectedGridIds!=null ) obj.dhx_win({ id:itemId,height:600,width:705,header:'Loanee Transaction',file_l:'loan/loan_view/loaneeTransaction/'+obj.selectedGridIds});
+            else obj.dhx_win({ id:itemId,height:600,width:705,header:'Loanee Transaction',file_l:'loan/loan_view/loaneeTransaction'});
+            }
+        }///
+        
+        else{
+            obj.ribbonEvevnt(itemId);
+        }
+        
+    });
+    // ribbon combo box event
+    obj.ribb['ribbon'].attachEvent('onSelectOption',function( id,ind,text){
+        if(id == 'userco'){
+            if(obj.ribbonPreviousId!='cooperativeList'){obj.message_show('**:Invalid Operation');return;}
+            if( ind == 2 ){ 
+                obj.toolbarShow(['newcoperative','approve','detail','search','edit']);	
+                obj.grid['tableFeild_t'].clearAndLoad('users/renderUsers/disapprove' );			
+            }
+            else if( ind == 1 ){				
+                obj.toolbarShow(['newcoperative','disapprove','detail','search','edit']);
+                obj.grid['tableFeild_t'].clearAndLoad('users/renderUsers/approve' );	
+            }				
+        }
+        
+    });
+	
+	$('#ribbon').on('click','div.dhxrb_big_button',function(e){
+		$('#ribbon div.dhxrb_big_button').removeClass('selButton');
+		$(this).addClass('selButton');
+	});
+	
+</script>
+  
+
+

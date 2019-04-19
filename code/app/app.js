@@ -18,7 +18,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req,res,next){
-  const token = req.headers['x-token']; 
+  // const token = req.headers['x-token']; 
+  const token = req.cookies.ucr_infosil; 
     if(token===undefined){ 
         res.locals.userData = null;
         next();
@@ -49,7 +50,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('pages/error');
 });
 
 module.exports = app;

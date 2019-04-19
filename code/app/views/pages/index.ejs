@@ -1,4 +1,15 @@
 <%- include('../layout/header') -%>
 
-sdfdsfl loginsss
+<% if(page==='admin') { %>
+    <%- include('../components/admin') -%>
+<% }else if(page==='home'){ %>
+    <%- include('../components/home') -%>
+<% }else if(page==='search'){ %>
+    <%- include('../components/search') -%>
+<% }else if(page==='login'){ %>
+    <%- include('../components/login') -%>
+<% } %>
+
+
+
 <%- include('../layout/footer') -%>
