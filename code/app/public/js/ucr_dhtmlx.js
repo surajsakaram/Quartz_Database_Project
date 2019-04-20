@@ -445,43 +445,45 @@ var Ucr_dhx = function(){
 		
 	};
 	/*********************************** DHTMLX AJAX FUNCTION ********************************/
-	Ucr_dhx.prototype.dhx_ajax = function(type, url, param ){
+	Ucr_dhx.prototype.dhx_ajax = function(data ){
 		'use strict';	
-		var r = null;
-		var param = param || null;
-		var ths = this;
+		var param = data.param || '';
 		window.dhx4.ajax.cache = true;
-		if(type=='post'){
-			r = (param!=null)?window.dhx4.ajax.postSync(url,param+"&object=ajax&csrf_char_ucr="+this.csrf_tokens):window.dhx4.ajax.postSync(url,"?object=ajax&csrf_char_ucr="+this.csrf_tokens);
+		if(data.type ==='post'){
+			window.dhx4.ajax.post(data.url,param,(r)=>{
+				if(r.xmlDoc.responseText==='expire'){
+					this.session_expire('expire');
+				}
+				else{
+					if(r.xmlDoc.status == 403){ 
+						data.cb('error',null);						
+					}
+					else{
+						data.cb(false,r.xmlDoc.response);
+					}
+				}
+			})
 		}
-		else if(type=='get'){
-			r = (param!=null)?window.dhx4.ajax.getSync(url+'?'+param+"&object=ajax"):window.dhx4.ajax.getSync(url+'?'+"object=ajax");
-		}
-		console.log(r);
-		if(r.xmlDoc.responseText==='expire'){
-			this.session_expire('expire');
-		}
-		else if(r.xmlDoc.responseText==='disable'){
-			this.session_expire('disable');
+		if(data.type ==='put'){
+			window.dhx4.ajax.put(data.url,param,(r)=>{
+				if(r.xmlDoc.responseText==='expire'){
+					this.session_expire('expire');
+				}
+				else{
+					if(r.xmlDoc.status == 403){ 
+						data.cb('error',null);						
+					}
+					else{
+						console.log(r.xmlDoc)
+						data.cb(false,r.xmlDoc.response);
+					}
+				}
+			})
 		}
 		else{
-			if(type=='post'){
-				if(r.xmlDoc.status == 403){ 
-					ths.message_show('** ERROR FOUND : request problem','error');
-					//setTimeout(function(){ window.location= ths.r_loc; }, 2000);
-					
-				}
-				try{
-					r = JSON.parse(r.xmlDoc.responseText);
-				}catch(e){
-					ths.message_show('** ERROR FOUND : request problem','error');
-					//setTimeout(function(){ window.location= ths.r_loc; }, 2000);
-				}
-				
-				ths.csrf_tokens = r.csrf;
-				return r.response;
-			}
-			else  return r.xmlDoc.responseText;
+			window.dhx4.ajax.get(data.url+"?"+param,(r)=>{
+				cb(false,r.xmlDoc.responseText)
+			});
 		}
 	};
 	/*********************************** DHTMLX TOOLBAR BUTTON VISIBILITY STATE FUNCTION ********************************/
@@ -652,58 +654,7 @@ var Ucr_dhx = function(){
 		this.chrt[container]  =  new dhtmlXChart(var_obj);								
 		
 	};
-	Ucr_dhx.prototype.verify_date = function(date){
-		if(date.indexOf('-') == -1 ){
-			return false;
-		}
-		var n1 = date.split('-');
-		var v = [4,2,2];
-		for(i=0; i < 3; i++){
-			if(n1[i].length != v[i]){
-				return false;
-			}
-		}
-		return true;
-	}
-	Ucr_dhx.prototype.emiCalculation = function(amount, interest,payemntType,tenure){
-		
-		if( amount.match(/^[0-9]+$/) == null ){
-			obj.message_show('Invalid Loan Amount','error');
-			return false;
-		}
-		if( tenure.match(/^[0-9]+$/) == null ){
-			obj.message_show('Invalid tenure','error');
-			return false;
-		}
-		if( interest.match(/^[0-9]+$/) == null ){
-			obj.message_show('Invalid Loan Interest','error');
-			return false;
-		}
-		
-		var t = payemntType.toLowerCase();
-		var n = 0;
-		var r = 0;
-		if(t=='monthly'){
-			n = tenure;
-			r = (  parseInt((interest.replace(/%/g, '')).replace(/ /g,''))/ 12 ) * 0.01;
-		}
-		else if(t=='daily'){
-			n = Math.floor(tenure*(280/12));
-			r = (  parseInt((interest.replace(/%/g, '')).replace(/ /g,''))/ 280 ) * 0.01;
-		}
-		else if(t=='weekly'){
-			n = Math.floor(tenure*(52/12));
-			r = (  parseInt((interest.replace(/%/g, '')).replace(/ /g,''))/ 52 ) * 0.01;
-		}
-		else{
-			obj.message_show('Invalid Repayment Type','error');
-			return false;
-		}
-		return { 
-			   		i : Math.ceil( amount * ( ( r *Math.pow(1+r,n))/ (Math.pow(1+r,n)-1  )  )),
-					n : n
-			   };		
-	}
+	
 	
 	
 //	console.log(Ucr_dhx);

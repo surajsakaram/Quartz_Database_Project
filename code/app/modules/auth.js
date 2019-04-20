@@ -10,7 +10,7 @@ module.exports = {
             if(err){
                 cb(err,false);
             }else{
-                db.users.findById(decoded.data,(err,data)=>{
+                db.users.findById(decoded.data).populate('groupId').exec((err,data)=>{
                     if(err){
                         cb(err,false);
                     }
@@ -37,6 +37,40 @@ module.exports = {
                 cb(false,hash);
             });
         });
-    }
+    },
+    login : function(data,cb){
+        
+        var ths = this;
+        db.users.findOne({"email":data.email},(err,edata)=>{
+            if(err){
+                cb(err,null);
+            }
+            else if(edata === null){
+                cb("invalid_email",null);
+            }
+            else{
+                bcrypt.compare(data.password, edata.password, function(err, res) {
+                    if(err){
+                        cb(err,null);
+                    }
+                    if(res){
+                        db.users.updateOne({_id:edata._id},{lastLogin:Math.floor(Date.now()/1000)},(err,udata)=>{
+                            if(err){
+                                cb(err,null);
+                            }
+                            else{
+                                const token = ths.genToken(edata._id);
+                                cb(false,token);
+                            }
+                        });
+                        
+                    }
+                    else{
+                        cb("invalid_password",null);
+                    }
+                });
+            }
+        });
+    },
 //end of object
 }

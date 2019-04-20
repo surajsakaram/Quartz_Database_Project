@@ -108,5 +108,8 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
-./code/app/node_modules
+
+./code/app/node_modules/
+./code/app/public/codebase2/
+./code/app/public/dhtmlx/
 # End of https://www.gitignore.io/api/node,expressionengine

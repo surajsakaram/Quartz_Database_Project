@@ -1,6 +1,5 @@
 const db  = require('../models');
 const auth  = require('./auth');
-const bcrypt = require('bcryptjs');
 module.exports = {
 
     createUser : (data,cb)=>{
@@ -47,25 +46,15 @@ module.exports = {
         });
     },
     
-    changeStatus : (data,cb)=>{
+    changeStatus : (id,state,cb)=>{
         
-        db.users.findById(data.id,(err,udata)=>{
+        db.users.findById(id,(err,udata)=>{
             if(err){
                 cb(err,null);
             }
             else{
-                if(!udata.active && data.state===true){
-                    db.users.findByIdAndUpdate(data.id,{active:true},(err,fdata)=>{
-                        if(err){
-                            cb(err,null);
-                        }
-                        else{
-                            cb(false,fdata)
-                        }
-                    })
-                }
-                else if(udata.active && data.state===false){
-                    db.users.findByIdAndUpdate(data.id,{active:false},(err,fdata)=>{
+                if(udata.active !== state){
+                    db.users.findByIdAndUpdate(id,{active:state},(err,fdata)=>{
                         if(err){
                             cb(err,null);
                         }
@@ -75,41 +64,8 @@ module.exports = {
                     })
                 }
                 else{
-                    cb(false,"nochange")
+                    cb('nochange',null)
                 }
-            }
-        });
-    },
-
-    login : (data,cb)=>{
-        db.users.findOne({"email":data.email},(err,edata)=>{
-            if(err){
-                cb(err,null);
-            }
-            else if(edata === null){
-                cb("invalid_email",null);
-            }
-            else{
-                bcrypt.compare(data.password, edata.password, function(err, res) {
-                    if(err){
-                        cb(err,null);
-                    }
-                    if(res){
-                        db.users.updateOne({_id:edata._id},{lastLogin:Math.floor(Date.now()/1000)},(err,udata)=>{
-                            if(err){
-                                cb(err,null);
-                            }
-                            else{
-                                const token = auth.genToken(edata._id);
-                                cb(false,token);
-                            }
-                        });
-                        
-                    }
-                    else{
-                        cb("invalid_password",null);
-                    }
-                });
             }
         });
     },

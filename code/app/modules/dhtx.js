@@ -1,10 +1,5 @@
 module.exports = {
 
-    dhxTableXml : (data,total,startPosition)=>{
-        let xmlData = "<?xml version='1.0' encoding='utf-8' ?>";
-        xmlData += `<rows total_count="${total}" pos="${startPosition}">`; 
-        xmlData += "</rows>";
-    },
     genRibbonJson : (type)=>{
        
 		let ribbon = [];

@@ -18,14 +18,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req,res,next){
-  // const token = req.headers['x-token']; 
+  
   const token = req.cookies.ucr_infosil; 
     if(token===undefined){ 
         res.locals.userData = null;
         next();
     }else{  
       auth.tokenValidate(token,(err,data)=>{
-        if(err ===false){
+        if(err){
           res.locals.userData = null;
         }
         else{
