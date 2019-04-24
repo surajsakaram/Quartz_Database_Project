@@ -75,6 +75,7 @@ if debug_mode:
     print(all_data)
     print(len(all_data))
 
+
 with open('opensecret_'+output_file_name+'.csv','w', newline="") as f:
     writer = csv.writer(f)
     header = ['Contributor', 'Category', 'Occupation', 'Date', 'Amount', 'Recipient']
