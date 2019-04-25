@@ -4,34 +4,48 @@ $white: #ffffff;
 $borderSetting: 1px solid $black;
 $borderRadius: 5px;
 
+$boxShadow: 0 4px 4px 0 rgba(0, 0, 0, 0.5);
+
 $searchPadding: 8px 15px;
 $searchWidth: 40%;
 
 $moveLeft: -15px;
 
 
-* {
-  box-sizing: border-box;
+
+body {
+  background: #f1f1f1;
 }
 
+/* HEADER */
+
+header {
+  top: 0;
+  left: 0;
+  position: fixed;
+  background-color: $black;
+  width: 100%;
+  height: 50px;
+}
+
+nav {
+  
+}
 
 main {
   //margin-top: percentage(1 / 8);
   margin-top: 200px;
 }
 
-.header {
-  top: 0;
-  left: 0;
-  background-color: $black;
-  width: 100%;
-  height: 50px;
-  position: fixed;
+/* SEARCH FORM */
+
+.search-autocomplete {
+  width: 500px;
+  margin: 0 auto;
 }
 
-
 .search-form {
-  margin: 25px;
+  margin: 25px 0;
 }
 
 .search-bar {
@@ -40,8 +54,8 @@ main {
   border: 1px solid grey;
   padding: $searchPadding;
   //width: $searchWidth;
-  min-width: 250px;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: $boxShadow;
+  width: 75%;
 }
 
 .search-btn {
@@ -52,17 +66,34 @@ main {
   position: relative;
   padding: $searchPadding;
   left: $moveLeft;
-
+  box-shadow: $boxShadow;
 }
+
+
+/* AUTOCOMPLETE */
 
 #autocomplete_suggestion {
   text-align: left;
-  border: 1px solid black;
+  background-color: $white;
+  .name {
+    color: $black;
+    margin-right: 5px;
+  }
+  .type {
+    color: grey;
+    margin-left: 5px;
+  }
+  
 }
 
-.autocomplete-result {
+.autocomplete-item {
   padding: $searchPadding;
   &:hover {
     cursor: pointer;
   }
+}
+
+.autocomplete-not-found {
+  padding: $searchPadding;
+  margin: 10px 5px;
 }

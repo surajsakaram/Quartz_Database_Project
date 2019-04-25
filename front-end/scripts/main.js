@@ -15,40 +15,73 @@ const info_list = [
 
 const regexWhitespace = "^\\s+$";
 
+function closeAutocomplete() {
+    $('#autocomplete_suggestion').removeClass('active');
+    $('#autocomplete_suggestion').html('');
+}
 
-function validateText(text) {
-
-} 
-
-function autocompleteAppend(results_arr) {
-    for (var i = 0; i < results_arr.length; i++) {
-        $('#autocomplete_suggestion').append(
-            `<div class="autocomplete-result" data-id="">
-               ${results_arr[i].name} 
-               <span> ${results_arr[i].type} </span>
-             </div>`
-        );
+function autocompleteAppend(resultArr) {
+    if (resultArr.length === 0) {
+        $('#autocomplete_suggestion').append(`<div class="autocomplete-not-found"> Result Not Found </div>`);
+        return;
+    }
+    for (var i = 0; i < resultArr.length; i++) {
+        const name = resultArr[i].name, type = resultArr[i].type;
+        const item = `<div class="autocomplete-item" data-id="${i}" data-name="${name}">${name+"\t"+type}</div>`
+        $('#autocomplete_suggestion').append(item);
     }
 }
 
+function openAutocomplete(target) {
+    target.on("change paste keyup click", function(){
+        
+        closeAutocomplete();
+        
+        var text = $(this).val();
+        if (text.trim() === '') return;
+        var resultList = info_list.filter(function(item){
+            return item.name.toLowerCase().indexOf(text.trim().toLowerCase()) !== -1;
+        });
+
+        if (resultList.length > 0) {
+            $('#autocomplete_suggestion').addClass('active');
+        }
+        autocompleteAppend(resultList);
+    });
+
+    ///*
+    $(document).click(function(event){
+        if (event.target.nodeName === "INPUT") return;
+        if ($('#autocomplete_suggestion').attr('class') === 'active') {
+            closeAutocomplete();
+        } 
+    });
+    //*/
+
+    autocompleteFilled();
+}
+
+
+function autocompleteFilled() {
+    $('#autocomplete_suggestion').on('click', '.autocomplete-item', function(event){
+        console.log(event.target);
+        var name = event.target.dataset.name.trim();
+        $('#search_bar').val(name);
+        closeAutocomplete();
+    });
+}
+
+
 $(document).ready(function(){
+
+    openAutocomplete($('#search_bar'));
+
+    $(document).on('click', function(event){
+        console.log(event.target);
+    })
 
     $('.search-btn').click(function(event){
         event.preventDefault();
-    });
-
-    $('#search_bar').on("change paste keyup", function(){
-        $('#autocomplete_suggestion').html('');
-        var text = $(this).val();
-
-        if (text.trim() === '') return;
-        //console.log(text);
-        var lii = info_list.filter(function(item){
-            return item.name.toLowerCase().indexOf(text.toLowerCase()) !== -1;
-        });
-        //console.log(lii);
-        
-        autocompleteAppend(lii);
     });
 
 });

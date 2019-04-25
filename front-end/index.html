@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>SV Search</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="vendor/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="styles/main.css">
 </head>
 <body class="text-center" cz-shortcut-listen="true">
   <header class="header">
@@ -14,33 +14,33 @@
 
     </nav>
   </header> 
+
   <main class="inner cover" role="main">
     
-    <!-- <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column"> -->
-       
+    <div class="container">
+      <p class="lead">
+        Discover how Silicon Valley money is flowing into politics. 
+        <br>
+        Start your search:
+      </p>
 
-      <div class="container">
-        <p class="lead">
-          Discover how Silicon Valley money is flowing into politics. 
-          <br>
-          Start your search:
-        </p>
+      <div class="search-autocomplete">
         <form class="search-form"> 
           <input id="search_bar" class="search-bar" type="text" placeholder="Executive or Company"/>
           <input id="search_btn" class="search-btn" type="button" value="SEARCH" >
         </form>
 
-        <div id="autocomplete_suggestion" class="suggestion-div">
-        </div>
+        <div id="autocomplete_suggestion" class=""></div>
         
       </div>
-    <!-- </div> -->
+          
+    </div>
     
   </main>
 
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="vendor/scripts/jquery-3.3.1.min.js"></script>
+  <script src="vendor/scripts/popper.min.js"></script>
+  <script src="vendor/scripts/bootstrap.min.js"></script>
   <script src="scripts/main.js"></script>
 </body>
 </html>
