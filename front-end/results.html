@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SV Results</title>
+  <link rel="stylesheet" href="vendor/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="styles/results.css">
+</head>
+<body class="text-center" cz-shortcut-listen="true">
+  <header class="header">
+    <nav>
+
+    </nav>
+    <form class="search-form"> 
+      <input id="search_bar" class="search-bar" type="text" placeholder="Executive or Company" />
+      <input id="search_btn" class="search-btn" type="button" value="SEARCH" />
+    </form>
+  </header> 
+
+  <main class="inner cover" role="main">
+      
+    <div class="container">
+      
+      <div class="page-nav">
+        Home > Executive / Company
+      </div>
+      
+      <div class="title-info">
+        Exec/Company, Title 
+        <a class="info-icon" href="">&#9432;</a>
+      </div>
+      
+      <section class="summary-container">
+        
+        <div class="summary-header">
+          Overall Summary
+        </div>
+        
+        <div class="graph">
+        
+        </div>
+
+        <div class="graph-btns">
+          <input type="button" value="Download image" /> 
+          <input type="button" value="Download data" /> 
+        </div>
+
+      </section>
+
+      <hr />
+
+      <section class="results-container">
+        <div class="results-header">
+          Results
+        </div>
+
+        <div class="results-btns">
+          <input type="button" value="Download data" /> 
+          <div class="dropdown">
+            <input type="button" class="dropdown-btn" value="Sort by &#8964;" />
+            <div class="dropdown-content">
+              <div >
+                Category: A - Z 
+              </div>
+              <div >
+                Category: Z - A 
+              </div>
+              <div >
+                Recipient: A - Z 
+              </div>
+              <div >
+                Recipient: Z - A 
+              </div>
+              <div >
+                Date: Newest to oldest 
+              </div>
+              <div >
+                Date: Oldest to newest
+              </div>
+              <div >
+                Amount: Highest to lowest
+              </div>
+              <div >
+                Amount: Lowest to Highest
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="table-wrapper">
+          <div class="column-selection-wrapper">
+            <div class="column-selection-label"> 
+              Add/Remove <br> Columns
+            </div>
+            <div class="column-selector">
+              <label class="checkbox">
+                Company
+                <input type="checkbox" checked="checked">
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox">
+                Executive
+                <input type="checkbox" checked="checked">
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox">
+                Position
+                <input type="checkbox" checked="checked">
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox">
+                Date
+                <input type="checkbox" checked="checked">
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox">
+                Amount
+                <input type="checkbox" checked="checked">
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox">
+                Recipient
+                <input type="checkbox" checked="checked">
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox">
+                Category
+                <input type="checkbox" checked="checked">
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox">
+                Source
+                <input type="checkbox" checked="checked">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+
+          <table id="table-results">
+            <tbody >
+              <tr class="table-header">
+                <td>Company</td>
+                <td>Executive</td>
+                <td>Position</td>
+                <td>Date</td>
+                <td>Amount</td>
+                <td>Recipient</td>
+                <td id="category_column">Category</td>
+                <td>Source</td>
+              </tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+              <tr><td>Company</td><td>Executive</td><td>Position</td><td>Date</td><td>Amount</td><td>Recipient</td><td>Category</td><td>Source</td></tr> 
+                             
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+      
+    </div>
+
+  </main>
+
+  <script src="vendor/scripts/jquery-3.3.1.min.js"></script>
+  <script src="vendor/scripts/popper.min.js"></script>
+  <script src="vendor/scripts/bootstrap.min.js"></script>
+  <script src="scripts/main.js"></script>
+</body>
+</html>

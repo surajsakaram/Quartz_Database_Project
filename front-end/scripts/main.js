@@ -72,9 +72,23 @@ function autocompleteFilled() {
 }
 
 
+function toggleDropdown() {
+    $('.dropdown-btn').click(function(){
+        $(this).toggleClass('active');
+        $('.dropdown-content').toggle();
+    });
+}
+
+
 $(document).ready(function(){
 
     openAutocomplete($('#search_bar'));
+
+    toggleDropdown(); 
+
+    $('.info-icon').click(function(event){
+        event.preventDefault();
+    });
 
     $(document).on('click', function(event){
         console.log(event.target);
