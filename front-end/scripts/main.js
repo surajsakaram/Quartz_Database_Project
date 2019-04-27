@@ -1,101 +1,116 @@
 
-const info_list = [
-    {"name": "Larry Page", "type": "e"},
-    {"name": "Sergey Brin", "type": "e"},
-    {"name": "Paul Allen", "type": "e"},
-    {"name": "Jeffrey Bezos", "type": "e"},
-    {"name": "Tim Cook", "type": "e"},
-    {"name": "Facebook", "type": "c"},
-    {"name": "Amazon", "type": "c"},
-    {"name": "Apple", "type": "c"},
-    {"name": "Neflix", "type": "c"},
-    {"name": "Google", "type": "c"},
-];
+(function(){
 
+    var AutoComplete = function() {
+        this.info_list = [];
+        this.startChar = '';
+        this.selectionID = '';
 
-const regexWhitespace = "^\\s+$";
+        this.searchBar = document.getElementById('search_bar');
+        this.searchSubmit = document.getElementById('search_btn');
+        this.suggestionList = document.getElementById('autocomplete_suggestion');
+    
+        this.openSuggestion = this.openSuggestion.bind(this);
+        this.fetchDataList = this.fetchDataList.bind(this);
+        this.clickOnSuggestion = this.clickOnSuggestion.bind(this);
+        this.closeSuggestion = this.closeSuggestion.bind(this);
 
-function closeAutocomplete() {
-    $('#autocomplete_suggestion').removeClass('active');
-    $('#autocomplete_suggestion').html('');
-}
-
-function autocompleteAppend(resultArr) {
-    if (resultArr.length === 0) {
-        $('#autocomplete_suggestion').append(`<div class="autocomplete-not-found"> Result Not Found </div>`);
-        return;
-    }
-    for (var i = 0; i < resultArr.length; i++) {
-        const name = resultArr[i].name, type = resultArr[i].type;
-        const item = `<div class="autocomplete-item" data-id="${i}" data-name="${name}">${name+"\t"+type}</div>`
-        $('#autocomplete_suggestion').append(item);
-    }
-}
-
-function openAutocomplete(target) {
-    target.on("change paste keyup click", function(){
         
-        closeAutocomplete();
+        this.searchBar.addEventListener('keyup', this.openSuggestion);
         
-        var text = $(this).val();
-        if (text.trim() === '') return;
-        var resultList = info_list.filter(function(item){
-            return item.name.toLowerCase().indexOf(text.trim().toLowerCase()) !== -1;
-        });
+        this.suggestionList.addEventListener('click', this.clickOnSuggestion, true);
+        //this.searchBar.addEventListener('blur', this.closeSuggestion);
 
-        if (resultList.length > 0) {
-            $('#autocomplete_suggestion').addClass('active');
+    };
+
+    AutoComplete.prototype.closeSuggestion = function () {
+        //this.suggestionList.innerHTML = "";
+        this.suggestionList.className = this.suggestionList.className.replace(' active', '');
+    };
+
+
+    AutoComplete.prototype.openSuggestion = function (event) {
+
+        var text = event.target.value;
+        console.log(text);
+        if(text.replace(/\s/g,'') === ''){
+            this.startChar = '';
+            this.closeSuggestion();
         }
-        autocompleteAppend(resultList);
-    });
+        else if (text.length === 1 && text !== this.startChar) {
+            this.startChar = text;
+            this.closeSuggestion();
+            this.info_list = [];
+            var promiseData = this.fetchDataList(text);
+            var thisOne = this;
+            promiseData.then(function(data){
+                thisOne.info_list = data;
+                var resultList = thisOne.filterText(text);
+                console.log(resultList);
+                thisOne.appendSuggestion(resultList);
+            }); 
+        } else {
+            this.closeSuggestion();
+            var resultList = this.filterText(text);
+            console.log(resultList);
+            this.appendSuggestion(resultList);
+        }       
+    };
 
-    ///*
-    $(document).click(function(event){
-        if (event.target.nodeName === "INPUT") return;
-        if ($('#autocomplete_suggestion').attr('class') === 'active') {
-            closeAutocomplete();
-        } 
-    });
-    //*/
+    AutoComplete.prototype.appendSuggestion = function (resultList) {
+        if (resultList.length === 0) {
+            this.suggestionList.innerHTML = "<div class=\"autocomplete-not-found\"> Result Not Found </div>";
+            this.suggestionList.className += " active";
+            return;
+        }
+        var appendHTMLStr = "";
+        for (var i = 0; i < resultList.length; i++) {
+            var name = resultList[i].name, type = resultList[i].type;
+            appendHTMLStr += '<div class="autocomplete-item" data-id="'+i+'" data-name="'+name+'">'+name+'\t'+type+'</div>\n';
+        }
+        this.suggestionList.innerHTML = '';
+        this.suggestionList.innerHTML = appendHTMLStr;
+        this.suggestionList.className += " active";
+    };
 
-    autocompleteFilled();
-}
-
-
-function autocompleteFilled() {
-    $('#autocomplete_suggestion').on('click', '.autocomplete-item', function(event){
+    AutoComplete.prototype.clickOnSuggestion = function (event) {
         console.log(event.target);
-        var name = event.target.dataset.name.trim();
-        $('#search_bar').val(name);
-        closeAutocomplete();
+        
+        this.selectionID = event.target.dataset.id;
+        this.searchBar.value = event.target.dataset.name;
+        this.closeSuggestion();
+        console.log(this.selectionID);
+    };
+
+    AutoComplete.prototype.fetchDataList = function (text) {
+        
+        return new Promise(function(resolve,reject){
+            setTimeout(function(){
+                resolve([
+                    {"name": "Larry Page", "type": "e"},
+                    {"name": "Sergey Brin", "type": "e"},
+                    {"name": "Paul Allen", "type": "e"},
+                    {"name": "Jeffrey Bezos", "type": "e"},
+                    {"name": "Tim Cook", "type": "e"},
+                    {"name": "Facebook", "type": "c"},
+                    {"name": "Amazon", "type": "c"},
+                    {"name": "Apple", "type": "c"},
+                    {"name": "Neflix", "type": "c"},
+                    {"name": "Google", "type": "c"}
+                ]);
+            },3000);
+        });
+    };
+
+    AutoComplete.prototype.filterText = function (text) {
+        return this.info_list.filter(function(item){
+            return item.name.toLowerCase().indexOf(text.replace(/ +(?= )/g, '').toLowerCase()) !== -1;
+        });
+    };
+
+    
+    document.addEventListener("DOMContentLoaded", function(){
+        new AutoComplete();
     });
-}
 
-
-function toggleDropdown() {
-    $('.dropdown-btn').click(function(){
-        $(this).toggleClass('active');
-        $('.dropdown-content').toggle();
-    });
-}
-
-
-$(document).ready(function(){
-
-    openAutocomplete($('#search_bar'));
-
-    toggleDropdown(); 
-
-    $('.info-icon').click(function(event){
-        event.preventDefault();
-    });
-
-    $(document).on('click', function(event){
-        console.log(event.target);
-    })
-
-    $('.search-btn').click(function(event){
-        event.preventDefault();
-    });
-
-});
+})();

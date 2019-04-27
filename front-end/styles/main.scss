@@ -73,6 +73,7 @@ main {
 /* AUTOCOMPLETE */
 
 #autocomplete_suggestion {
+  display: none;
   text-align: left;
   background-color: $white;
   .name {
@@ -82,6 +83,9 @@ main {
   .type {
     color: grey;
     margin-left: 5px;
+  }
+  &.active {
+    display: block;
   }
   
 }
