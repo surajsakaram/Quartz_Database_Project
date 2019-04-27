@@ -14,18 +14,26 @@
         this.fetchDataList = this.fetchDataList.bind(this);
         this.clickOnSuggestion = this.clickOnSuggestion.bind(this);
         this.closeSuggestion = this.closeSuggestion.bind(this);
+        this.submitQuery = this.submitQuery.bind(this);
 
-        
         this.searchBar.addEventListener('keyup', this.openSuggestion);
-        
-        this.suggestionList.addEventListener('click', this.clickOnSuggestion, true);
-        //this.searchBar.addEventListener('blur', this.closeSuggestion);
+        this.suggestionList.addEventListener('mousedown', this.clickOnSuggestion);
+        this.searchBar.addEventListener('blur', this.closeSuggestion); 
+
+        this.searchSubmit.addEventListener('click', this.submitQuery);
 
     };
 
+
+    AutoComplete.prototype.submitQuery = function (event) {
+        event.preventDefault();
+        console.log(this.selectionID);
+    };
+
+
     AutoComplete.prototype.closeSuggestion = function () {
         //this.suggestionList.innerHTML = "";
-        this.suggestionList.className = this.suggestionList.className.replace(' active', '');
+        this.suggestionList.className = "";
     };
 
 
@@ -41,8 +49,8 @@
             this.startChar = text;
             this.closeSuggestion();
             this.info_list = [];
-            var promiseData = this.fetchDataList(text);
             var thisOne = this;
+            var promiseData = this.fetchDataList(text);
             promiseData.then(function(data){
                 thisOne.info_list = data;
                 var resultList = thisOne.filterText(text);
@@ -54,13 +62,14 @@
             var resultList = this.filterText(text);
             console.log(resultList);
             this.appendSuggestion(resultList);
-        }       
+        }   
+          
     };
 
     AutoComplete.prototype.appendSuggestion = function (resultList) {
         if (resultList.length === 0) {
-            this.suggestionList.innerHTML = "<div class=\"autocomplete-not-found\"> Result Not Found </div>";
-            this.suggestionList.className += " active";
+            this.suggestionList.innerHTML = '<div class="autocomplete-not-found"> Result Not Found </div>';
+            this.suggestionList.className = "active";
             return;
         }
         var appendHTMLStr = "";
@@ -68,9 +77,9 @@
             var name = resultList[i].name, type = resultList[i].type;
             appendHTMLStr += '<div class="autocomplete-item" data-id="'+i+'" data-name="'+name+'">'+name+'\t'+type+'</div>\n';
         }
-        this.suggestionList.innerHTML = '';
+        // /this.suggestionList.innerHTML = '';
         this.suggestionList.innerHTML = appendHTMLStr;
-        this.suggestionList.className += " active";
+        this.suggestionList.className = "active";
     };
 
     AutoComplete.prototype.clickOnSuggestion = function (event) {
